@@ -18,6 +18,9 @@ export class PostDto {
 
   @ApiProperty({ example: '/%E4' })
   source: string | null;
+  
+  @ApiProperty({ example: 'Vida linda' })
+  caption: string | null;
 
   @ApiProperty({ type: Date, example: new Date() })
   createdAt: Date;

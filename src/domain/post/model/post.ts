@@ -7,6 +7,7 @@ export class Post {
   type: PostType;
   textContent: string | null;
   source: string | null;
+  caption: string | null;
   createdAt?: Date;
   updatedAt?: Date;
   likeCount?: number;

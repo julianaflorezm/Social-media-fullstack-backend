@@ -34,6 +34,7 @@ CREATE TABLE posts (
   type TEXT NOT NULL,
   text_content TEXT NULL,
   source TEXT NULL,
+  caption TEXT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );

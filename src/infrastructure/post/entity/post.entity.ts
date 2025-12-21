@@ -37,6 +37,10 @@ export class PostEntity {
   @Column({ type: 'text', nullable: true })
   source: string | null;
 
+  // Solo para posts tipo imagen
+  @Column({ type: 'text', nullable: true })
+  caption: string | null;
+
   @OneToMany(() => CommentEntity, (c) => c.post, { cascade: false })
   comments: CommentEntity[];
 

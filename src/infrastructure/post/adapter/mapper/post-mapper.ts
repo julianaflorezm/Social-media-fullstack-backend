@@ -9,6 +9,7 @@ export class PostMapper {
       type: postEntity.type,
       textContent: postEntity.textContent,
       source: postEntity.source,
+      caption: postEntity.caption,
       createdAt: postEntity?.createdAt,
       updatedAt: postEntity?.updatedAt,
       commentCount: postEntity.comments.length,

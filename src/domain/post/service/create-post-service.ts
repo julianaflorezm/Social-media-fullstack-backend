@@ -34,6 +34,9 @@ export class CreatePostsService {
       source: post.type === PostType.IMAGE
                 ? post.source?.trim() ?? null
                 : null,
+      caption: post.type === PostType.IMAGE
+                ? post.caption?.trim() ?? null
+                : null,
     }
     const postCreated = await this.postsRepo.create(postToCreate);
 
