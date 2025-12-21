@@ -10,7 +10,13 @@ async function bootstrap() {
     .setDescription('This API is a Red Social platform on server site')
     .setVersion('1.0')
     .addTag('test')
-    .build();  
+    .build();
+  app.enableCors({
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+  });
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger-ui/doc', app, document);
   await app.listen(process.env.PORT ?? 3000);

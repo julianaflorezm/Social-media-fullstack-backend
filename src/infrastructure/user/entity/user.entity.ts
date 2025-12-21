@@ -1,3 +1,4 @@
+import { PostEntity } from '../../../infrastructure/post/entity/post.entity';
 import { RoleEntity } from '../../role/entity/role.entity';
 import {
   Column,
@@ -7,7 +8,10 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
+import { CommentEntity } from '../../../infrastructure/comments/entity/comments.entity';
+import { PostLikeEntity } from '../../../infrastructure/post-likes/entity/post-likes.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -16,15 +20,18 @@ export class UserEntity {
 
   @Column()
   name: string;
+  
+  @Column()
+  lastname: string;
+
+  @Column()
+  alias: string;
 
   @Column()
   password: string;
 
   @Column()
   email: string;
-
-  @Column()
-  phone: string;
 
   @CreateDateColumn({
     type: 'timestamp',
@@ -42,4 +49,14 @@ export class UserEntity {
   @ManyToOne(() => RoleEntity, (role) => role.users)
   @JoinColumn({ name: 'role_id' })
   role: RoleEntity;
+
+  @OneToMany(() => PostEntity, (post) => post.author)
+  @JoinColumn({ name: 'post_id' })
+  posts: PostEntity[]
+
+  @OneToMany(() => CommentEntity, (c) => c.author)
+  comments: CommentEntity[];
+
+  @OneToMany(() => PostLikeEntity, (l) => l.user)
+  postLikes: PostLikeEntity[];
 }

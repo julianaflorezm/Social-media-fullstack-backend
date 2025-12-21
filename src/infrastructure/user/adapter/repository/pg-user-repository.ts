@@ -6,6 +6,7 @@ import { UserEntity } from '../../entity/user.entity';
 import { UserDto } from '../../../../application/user/dto/user.dto';
 import { User } from '../../../../domain/user/model/user';
 import { RoleEntity } from '../../../../infrastructure/role/entity/role.entity';
+import e from 'express';
 
 @Injectable()
 export class PgUserRepository implements UserRepository {
@@ -31,8 +32,9 @@ export class PgUserRepository implements UserRepository {
   async create(user: User): Promise<UserDto> {
     const entity = new UserEntity();
     entity.name = user.name;
+    entity.lastname = user.lastname;
+    entity.alias = user.alias;
     entity.email = user.email;
-    entity.phone = user.phone;
     entity.password = user.password;
 
     if (user.role) {

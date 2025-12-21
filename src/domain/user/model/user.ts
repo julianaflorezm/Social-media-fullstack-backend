@@ -7,9 +7,10 @@ import { HttpStatus } from '@nestjs/common';
 export class User {
   readonly #id: number;
   readonly #name: string;
+  readonly #lastname: string;
+  readonly #alias: string;
   readonly #password: string;
   readonly #email: string;
-  readonly #phone: string;
   #role?: Role;
   readonly #created: Date;
   readonly #updated: Date;
@@ -17,18 +18,20 @@ export class User {
   constructor(
     id: number,
     name: string,
+    lastname: string,
+    alias: string,
     password: string,
     email: string,
-    phone: string,
     created: Date,
     updated: Date,
     role?: Role,
   ) {
     this.#id = id;
     this.#name = name;
+    this.#lastname = lastname;
+    this.#alias = alias;
     this.#password = password;
     this.#email = email;
-    this.#phone = phone;
     this.#role = role;
     this.#created = created;
     this.#updated = updated;
@@ -36,9 +39,10 @@ export class User {
 
   static async create(
     name: string,
+    lastmane: string,
+    alias: string,
     password: string,
     email: string,
-    phone: string,
     role?: Role,
   ) {
     //this.validarTamanoClave(password);
@@ -49,9 +53,10 @@ export class User {
     return new this(
       id,
       name,
+      lastmane,
+      alias,
       password,
       email,
-      phone,
       createdAt,
       updatedAt,
       role,
@@ -89,6 +94,14 @@ export class User {
     return this.#name;
   }
 
+  get lastname(): string {
+    return this.#lastname;
+  }
+
+  get alias(): string {
+    return this.#alias;
+  }
+  
   get password(): string {
     return this.#password;
   }
@@ -97,9 +110,7 @@ export class User {
     return this.#email;
   }
 
-  get phone(): string {
-    return this.#phone;
-  }
+  
 
   // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
   get role(): Role | undefined {

@@ -6,8 +6,9 @@ export class UserMapper {
     return {
       id: userEntity.id,
       name: userEntity.name,
+      lastname: userEntity.lastname,
+      alias: userEntity.alias,
       email: userEntity.email,
-      phone: userEntity.phone,
       role: userEntity.role,
       password: userEntity.password,
       created: userEntity?.created,

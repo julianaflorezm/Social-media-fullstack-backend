@@ -7,9 +7,13 @@ export class CreateUserCommand extends PartialType(UserLoginCommand) {
   @IsNotEmpty()
   name: string;
 
-  @ApiProperty({ example: '3241234456' })
+  @ApiProperty({ example: 'pinzon' })
   @IsNotEmpty()
-  phone: string;
+  lastname: string;
+
+  @ApiProperty({ example: 'Ani' })
+  @IsNotEmpty()
+  alias: string;
 
   @ApiProperty({ example: 1 })
   @IsNotEmpty()

@@ -8,11 +8,14 @@ export class UserDto {
   @ApiProperty({ example: 'Ana' })
   name: string;
 
+  @ApiProperty({ example: 'Pinzon' })
+  lastname: string;
+
+  @ApiProperty({ example: 'Ani' })
+  alias: string;
+
   @ApiProperty({ example: 'ana@gmail.com' })
   email: string;
-
-  @ApiProperty({ example: '3241234456' })
-  phone: string;
 
   @ApiProperty({
     example: { id: 1, name: 'ADMIN', created: new Date(), updated: new Date() },

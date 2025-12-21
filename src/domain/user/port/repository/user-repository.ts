@@ -3,5 +3,6 @@ import { User } from '../../model/user';
 
 export abstract class UserRepository {
   abstract findByEmail(email: string): Promise<UserDto | null>;
+  abstract findUser(id: number): Promise<UserDto | null>;
   abstract create(user: User): Promise<UserDto>;
 }

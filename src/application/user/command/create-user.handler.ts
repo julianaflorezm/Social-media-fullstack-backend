@@ -16,7 +16,7 @@ export class CreateUserHandler {
       throw new Error('Email is required');
     }
     return await this._createUserService.run(
-      await User.create(user.name, user.password, user.email, user.phone),
+      await User.create(user.name, user.lastname, user.alias, user.password, user.email),
       user.roleId,
     );
   }

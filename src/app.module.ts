@@ -5,9 +5,16 @@ import { RoleModule } from './infrastructure/role/role.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { databaseConfigFactory } from './infrastructure/config/database.config';
 import { AuthModule } from './infrastructure/auth/auth.module';
+import { PostModule } from './infrastructure/post/post.module';
+import { join } from 'path';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(process.cwd(), 'uploads'),
+      serveRoot: '/uploads',
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: 'env/.env',
@@ -19,6 +26,7 @@ import { AuthModule } from './infrastructure/auth/auth.module';
     UserModule,
     RoleModule,
     AuthModule,
+    PostModule
   ],
 })
 export class AppModule {}
