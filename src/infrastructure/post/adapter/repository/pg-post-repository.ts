@@ -66,11 +66,11 @@ export class PgPostRepository implements PostRepository {
   //   return user ?? null;;
   // }
 
-  // async findAll(): Promise<UserDto[]> {
-  //   return await this._userRepository.find({
-  //     relations: {
-  //       role: true,
-  //     },
-  //   });
-  // }
+  async getAll(): Promise<PostDto[]> {
+    const postsEntity = await this._postRepository.find({
+      relations: { author: true, comments: true, likes: true },
+      order: { createdAt: 'DESC' },
+    });
+    return postsEntity.map((p) => this._postMapper.entityToDomain(p))
+  }
 }

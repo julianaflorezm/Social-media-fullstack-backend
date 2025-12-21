@@ -7,10 +7,13 @@ import { createPostServiceProvider } from './service/create-post-service.provide
 import { PgPostRepository } from '../adapter/repository/pg-post-repository';
 import { UserEntity } from '../../user/entity/user.entity';
 import { PostRepository } from '../../../domain/post/port/repository/post-repository';
-import { CreatePostsService } from 'src/domain/post/service/create-post-service';
-import { CreatePostHandler } from 'src/application/post/command/create-post.handler';
+import { CreatePostsService } from '../../../domain/post/service/create-post-service';
+import { CreatePostHandler } from '../../../application/post/command/create-post.handler';
 import { postRepositoryProvider } from './repository/post-repository.provider';
-import { UserProviderModule } from 'src/infrastructure/user/provider/user-provider.module';
+import { UserProviderModule } from '../../../infrastructure/user/provider/user-provider.module';
+import { GetAllPostService } from '../../../domain/post/service/get-all-post-service';
+import { getAllPostServiceProvider } from './service/get-all-post-service.provider';
+import { GetAllPostHandler } from 'src/application/post/query/get-all-post.hadler';
 
 @Module({
   imports: [
@@ -20,11 +23,11 @@ import { UserProviderModule } from 'src/infrastructure/user/provider/user-provid
     UserProviderModule
   ],
   providers: [
-    // {
-    //   provide: GetUserListService,
-    //   inject: [UserRepository],
-    //   useFactory: getUserListServiceProvider,
-    // },
+    {
+      provide: GetAllPostService,
+      inject: [PostRepository],
+      useFactory: getAllPostServiceProvider,
+    },
     { provide: PostRepository, useClass: PgPostRepository },
     // {
     //   provide: GetUserService,
@@ -54,6 +57,7 @@ import { UserProviderModule } from 'src/infrastructure/user/provider/user-provid
     PostMapper,
     // GetUserHandler,
     // DeleteUserHandler,
+    GetAllPostHandler,
     CreatePostHandler,
     // UpdateUserHandler,
     // GetUserListHandler,
@@ -63,6 +67,7 @@ import { UserProviderModule } from 'src/infrastructure/user/provider/user-provid
     PostRepository,
     CreatePostsService,
     CreatePostHandler,
+    GetAllPostHandler
   ],
 })
 export class PostProviderModule {}

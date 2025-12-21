@@ -29,28 +29,28 @@ import { randomUUID } from 'crypto';
 import { extname } from 'path';
 import { diskStorage } from 'multer';
 import { PostType } from 'src/domain/post/model/post-type';
+import { GetAllPostHandler } from 'src/application/post/query/get-all-post.hadler';
 
 @ApiBearerAuth()
 @ApiTags('post')
 @Controller('post')
 export class PostController {
   constructor(
+    private readonly _getAllPostHandler: GetAllPostHandler,
     private readonly _createPostHandler: CreatePostHandler,
   ) {}
 
-  // @Get('all')
-  // @ApiOperation({ summary: 'Find all users' })
-  // @ApiResponse({
-  //   status: 200,
-  //   description: 'Find all users persisted on database',
-  //   type: UserDto,
-  // })
-  // @UseGuards(JwtAuthGuard)
-  // @UseGuards(AuthGuard('jwt'))
-  // @Roles('ADMIN')
-  // async getAll(): Promise<UserDto[]> {
-  //   return await this._getUserListHandler.run();
-  // }
+  @Get('all')
+  @ApiOperation({ summary: 'Find all posts' })
+  @ApiResponse({
+    status: 200,
+    description: 'Find all posts persisted on database',
+    type: PostDto,
+  })
+  @Roles('ADMIN', 'EMPLOYEE', 'CUSTOMER')
+  async getAll(): Promise<PostDto[]> {
+    return await this._getAllPostHandler.run();
+  }
 
   // @Get(':email')
   // @ApiOperation({ summary: 'Find user by email' })

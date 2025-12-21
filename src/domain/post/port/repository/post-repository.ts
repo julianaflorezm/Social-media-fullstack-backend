@@ -3,4 +3,5 @@ import { Post } from '../../model/post';
 
 export abstract class PostRepository {
   abstract create(post: Post): Promise<PostDto>;
+  abstract getAll(): Promise<PostDto[]>
 }
