@@ -16,7 +16,7 @@ import { PostEntity } from '../../../infrastructure/post/entity/post.entity';
 @Index('idx_post_likes_user_id', ['user'])
 export class PostLikeEntity {
   @PrimaryColumn({ name: 'post_id' })
-  postId: number;
+  postId: string;
 
   @PrimaryColumn({ name: 'user_id' })
   userId: number;

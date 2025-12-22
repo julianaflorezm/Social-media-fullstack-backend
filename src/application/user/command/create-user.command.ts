@@ -15,6 +15,10 @@ export class CreateUserCommand extends PartialType(UserLoginCommand) {
   @IsNotEmpty()
   alias: string;
 
+  @ApiProperty({ example: new Date('15/05/1999') })
+  @IsNotEmpty()
+  birthdate: Date;
+
   @ApiProperty({ example: 1 })
   @IsNotEmpty()
   @IsNumber()

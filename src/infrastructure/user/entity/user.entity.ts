@@ -32,6 +32,9 @@ export class UserEntity {
 
   @Column()
   email: string;
+  
+  @Column()
+  birthdate: Date;
 
   @CreateDateColumn({
     type: 'timestamp',

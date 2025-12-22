@@ -3,9 +3,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from '../entity/user.entity';
 import { userRepositoryProvider } from './repository/user-repository.provider';
 import { UserRepository } from '../../../domain/user/port/repository/user-repository';
-import { GetUserService } from '../../../domain/user/service/get-user-service';
+import { GetUserService } from '../../../domain/user/service/get-user-by-email-service';
 import { getUserServiceProvider } from './service/get-user-service.provider';
-import { GetUserHandler } from '../../../application/user/query/get-user.handler';
+import { GetUserHandler } from '../../../application/user/query/get-user-by-email.handler';
 import { UserMapper } from '../adapter/mapper/user-mapper';
 import { RoleEntity } from '../../../infrastructure/role/entity/role.entity';
 import { roleRepositoryProvider } from '../../../infrastructure/role/provider/repository/role-repository.provider';
@@ -14,6 +14,9 @@ import { RoleRepository } from 'src/domain/role/port/repository/role-repository'
 import { createUserServiceProvider } from './service/create-user-service.provider';
 import { CreateUserHandler } from 'src/application/user/command/create-user.handler';
 import { PgUserRepository } from '../adapter/repository/pg-user-repository';
+import { GetUserByIdService } from 'src/domain/user/service/get-user-by-id-service';
+import { getUserByIdServiceProvider } from './service/get-user-by-id-service.provider';
+import { GetUserByIdHandler } from 'src/application/user/query/get-user-by-id.handler';
 
 @Module({
   imports: [
@@ -22,11 +25,11 @@ import { PgUserRepository } from '../adapter/repository/pg-user-repository';
     UserMapper,
   ],
   providers: [
-    // {
-    //   provide: GetUserListService,
-    //   inject: [UserRepository],
-    //   useFactory: getUserListServiceProvider,
-    // },
+    {
+      provide: GetUserByIdService,
+      inject: [UserRepository],
+      useFactory: getUserByIdServiceProvider,
+    },
     { provide: UserRepository, useClass: PgUserRepository },
     {
       provide: GetUserService,
@@ -55,6 +58,7 @@ import { PgUserRepository } from '../adapter/repository/pg-user-repository';
     // },
     UserMapper,
     GetUserHandler,
+    GetUserByIdHandler,
     // DeleteUserHandler,
     CreateUserHandler,
     // UpdateUserHandler,
@@ -68,6 +72,8 @@ import { PgUserRepository } from '../adapter/repository/pg-user-repository';
     UserRepository,
     CreateUserService,
     CreateUserHandler,
+    GetUserByIdHandler,
+    GetUserByIdService
   ],
 })
 export class UserProviderModule {}

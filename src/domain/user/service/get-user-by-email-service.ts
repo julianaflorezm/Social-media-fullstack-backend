@@ -1,13 +1,13 @@
-import { ValueRequiredError } from '../../../domain/errors/value-required-error';
+import { ValueRequiredError } from '../../errors/value-required-error';
 import { UserDto } from '../../../application/user/dto/user.dto';
 import { UserRepository } from '../port/repository/user-repository';
 import { HttpStatus } from '@nestjs/common';
-import { BussinessError } from '../../../domain/errors/bussiness-error';
+import { BussinessError } from '../../errors/bussiness-error';
 import {
   EMAIL_IS_REQUIRED,
   USER_ID_REQUIRED,
   USER_NOT_FOUND,
-} from '../../../domain/errors/common-messages';
+} from '../../errors/common-messages';
 
 export class GetUserService {
   constructor(private readonly _userRepository: UserRepository) {}

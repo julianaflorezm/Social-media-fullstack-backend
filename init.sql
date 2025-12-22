@@ -16,6 +16,7 @@ CREATE TABLE Users(
     password varchar(250) NOT NULL,
     email varchar(250) UNIQUE NOT NULL,
     alias varchar(20) NOT NULL,
+    birthdate Date NOT NULL,
     role_id int NOT NULL,
     created timestamp default current_timestamp,
     updated timestamp default current_timestamp

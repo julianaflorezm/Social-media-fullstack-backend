@@ -25,6 +25,8 @@ export class CreatePostsService {
     if (post.type === PostType.IMAGE && !post.source?.trim()) {
       throw new BadRequestException('Source is required for image posts');
     }
+    console.log('post.caption',post.caption);
+    
     const postToCreate: Post = {
       author,
       type: post.type,

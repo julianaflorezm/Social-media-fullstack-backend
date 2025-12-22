@@ -15,9 +15,10 @@ import { Roles } from '../../role/decorator/role.decorator';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiCreatedResponse, ApiNotAcceptableResponse, ApiNotFoundResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserDto } from 'src/application/user/dto/user.dto';
-import { GetUserHandler } from 'src/application/user/query/get-user.handler';
+import { GetUserHandler } from 'src/application/user/query/get-user-by-email.handler';
 import { CreateUserHandler } from 'src/application/user/command/create-user.handler';
 import { CreateUserCommand } from 'src/application/user/command/create-user.command';
+import { GetUserByIdHandler } from 'src/application/user/query/get-user-by-id.handler';
 
 @ApiBearerAuth()
 @ApiTags('users')
@@ -26,21 +27,22 @@ export class UserController {
   constructor(
     private readonly _createUserHandler: CreateUserHandler,
     private readonly _getUserHandler: GetUserHandler,
+    private readonly _getUserByIdHandler: GetUserByIdHandler,
   ) {}
 
-  // @Get('all')
-  // @ApiOperation({ summary: 'Find all users' })
-  // @ApiResponse({
-  //   status: 200,
-  //   description: 'Find all users persisted on database',
-  //   type: UserDto,
-  // })
-  // @UseGuards(JwtAuthGuard)
-  // @UseGuards(AuthGuard('jwt'))
-  // @Roles('ADMIN')
-  // async getAll(): Promise<UserDto[]> {
-  //   return await this._getUserListHandler.run();
-  // }
+  @Get(':id')
+  @ApiOperation({ summary: 'Find an user' })
+  @ApiResponse({
+    status: 200,
+    description: 'Find an user persisted on database',
+    type: UserDto,
+  })
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(AuthGuard('jwt'))
+  @Roles('ADMIN', 'EMPLOYEE', 'CUSTOMER')
+  async getAll( @Param('id') id: number ): Promise<Partial<UserDto> | null> {
+    return await this._getUserByIdHandler.run(id);
+  }
 
   @Get(':email')
   @ApiOperation({ summary: 'Find user by email' })

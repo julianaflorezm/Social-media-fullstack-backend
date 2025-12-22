@@ -8,6 +8,7 @@ import { AuthModule } from './infrastructure/auth/auth.module';
 import { PostModule } from './infrastructure/post/post.module';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { PostLikesModule } from './infrastructure/post-likes/post-likes.module';
 
 @Module({
   imports: [
@@ -26,7 +27,8 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     UserModule,
     RoleModule,
     AuthModule,
-    PostModule
+    PostModule,
+    PostLikesModule
   ],
 })
 export class AppModule {}

@@ -18,7 +18,7 @@ import { Roles } from '../../role/decorator/role.decorator';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiCreatedResponse, ApiNotAcceptableResponse, ApiNotFoundResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserDto } from 'src/application/user/dto/user.dto';
-import { GetUserHandler } from 'src/application/user/query/get-user.handler';
+import { GetUserHandler } from 'src/application/user/query/get-user-by-email.handler';
 import { CreateUserHandler } from 'src/application/user/command/create-user.handler';
 import { CreateUserCommand } from 'src/application/user/command/create-user.command';
 import { CreatePostHandler } from 'src/application/post/command/create-post.handler';

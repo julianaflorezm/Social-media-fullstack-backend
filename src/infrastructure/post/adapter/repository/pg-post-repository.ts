@@ -22,6 +22,7 @@ export class PgPostRepository implements PostRepository {
     entity.type = post.type;
     entity.textContent = post.textContent;
     entity.source = post.source;
+    entity.caption = post.caption;
     entity.comments = [];
     entity.likes = [];
 
@@ -56,15 +57,17 @@ export class PgPostRepository implements PostRepository {
   //   return (await this._userRepository.delete(id)).affected === 1;
   // }
 
-  // async findUser(id: number): Promise<UserDto | null> {
-  //   const user = await this._userRepository.findOne({
-  //     where: { id },
-  //     relations: {
-  //       role: true,
-  //     },
-  //   });
-  //   return user ?? null;;
-  // }
+  async findOne(id: string): Promise<PostDto | null> {
+    const post = await this._postRepository.findOne({
+      where: { id },
+      relations: {
+        author: true,
+        comments: true,
+        likes: true
+      }
+    });    
+    return post ? this._postMapper.entityToDomain(post) : null;
+  }
 
   async getAll(): Promise<PostDto[]> {
     const postsEntity = await this._postRepository.find({

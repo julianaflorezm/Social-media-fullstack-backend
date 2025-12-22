@@ -17,6 +17,9 @@ export class UserDto {
   @ApiProperty({ example: 'ana@gmail.com' })
   email: string;
 
+  @ApiProperty({ example: new Date('13-05-1999')})
+  birthdate: Date;
+
   @ApiProperty({
     example: { id: 1, name: 'ADMIN', created: new Date(), updated: new Date() },
   })

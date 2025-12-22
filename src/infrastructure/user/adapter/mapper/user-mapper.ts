@@ -9,6 +9,7 @@ export class UserMapper {
       lastname: userEntity.lastname,
       alias: userEntity.alias,
       email: userEntity.email,
+      birthdate: userEntity.birthdate,
       role: userEntity.role,
       password: userEntity.password,
       created: userEntity?.created,

@@ -35,6 +35,7 @@ export class PgUserRepository implements UserRepository {
     entity.lastname = user.lastname;
     entity.alias = user.alias;
     entity.email = user.email;
+    entity.birthdate = user.birthdate;
     entity.password = user.password;
 
     if (user.role) {

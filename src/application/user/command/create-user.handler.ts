@@ -9,6 +9,7 @@ export class CreateUserHandler {
   constructor(private _createUserService: CreateUserService) {}
 
   async run(user: CreateUserCommand): Promise<UserDto> {
+    
     if (!user.password) {
       throw new Error('Password is required');
     }
@@ -16,7 +17,7 @@ export class CreateUserHandler {
       throw new Error('Email is required');
     }
     return await this._createUserService.run(
-      await User.create(user.name, user.lastname, user.alias, user.password, user.email),
+      await User.create(user.name, user.lastname, user.alias, user.password, user.email, user.birthdate),
       user.roleId,
     );
   }

@@ -11,6 +11,7 @@ export class User {
   readonly #alias: string;
   readonly #password: string;
   readonly #email: string;
+  readonly #birthdate: Date;
   #role?: Role;
   readonly #created: Date;
   readonly #updated: Date;
@@ -22,6 +23,7 @@ export class User {
     alias: string,
     password: string,
     email: string,
+    birthdate: Date,
     created: Date,
     updated: Date,
     role?: Role,
@@ -32,6 +34,7 @@ export class User {
     this.#alias = alias;
     this.#password = password;
     this.#email = email;
+    this.#birthdate = birthdate;
     this.#role = role;
     this.#created = created;
     this.#updated = updated;
@@ -43,6 +46,7 @@ export class User {
     alias: string,
     password: string,
     email: string,
+    birthdate: Date,
     role?: Role,
   ) {
     //this.validarTamanoClave(password);
@@ -57,6 +61,7 @@ export class User {
       alias,
       password,
       email,
+      birthdate,
       createdAt,
       updatedAt,
       role,
@@ -110,7 +115,9 @@ export class User {
     return this.#email;
   }
 
-  
+  get birthdate(): Date {
+    return this.#birthdate;
+  }
 
   // eslint-disable-next-line @typescript-eslint/adjacent-overload-signatures
   get role(): Role | undefined {
