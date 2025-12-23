@@ -27,7 +27,7 @@ El sistema está compuesto por:
 
 ## 🏗 Arquitectura general
 
-El backend sigue principios de **Clean Architecture** y arquitecture Hexagonal, separando claramente:
+El backend sigue principios de **Arquitecture Hexagonal**, separando claramente:
 - Application
 - Dominio
 - Infraestructura
@@ -112,7 +112,7 @@ EXPOSE 8080
 CMD ["npm", "run", "start:dev"]
 ```
 
-### docker-compose.yml (Backend + DB)
+### docker-compose.yml (Frontend)
 
 ```docker-compose
 version: '3.8'
