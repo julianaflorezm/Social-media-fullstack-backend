@@ -112,7 +112,7 @@ EXPOSE 8080
 CMD ["npm", "run", "start:dev"]
 ```
 
-### docker-compose
+### docker-compose.yml (Backend + DB)
 
 ```docker-compose
 version: '3.8'
