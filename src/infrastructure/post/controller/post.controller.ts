@@ -150,6 +150,8 @@ export class PostController {
     @Body()
     post: CreatePostCommand,
   ): Promise<PostDto> {
+    console.log(post.authorId);
+    
     if (!source && post.type === PostType.IMAGE) {
       throw new BadRequestException('Image file is required');
     } 

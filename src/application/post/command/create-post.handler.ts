@@ -7,8 +7,7 @@ import { PostDto } from '../dto/post.dto';
 export class CreatePostHandler {
   constructor(private _createPostService: CreatePostsService) {}
 
-  async run(post: CreatePostCommand): Promise<PostDto> {
-    
+  async run(post: CreatePostCommand): Promise<PostDto> {    
     return await this._createPostService.run(post.authorId, post);
   }
 }

@@ -15,7 +15,7 @@ export class CreatePostsService {
     @InjectRepository(UserEntity) private readonly usersRepo: UserRepository,
   ) {}
 
-  async run(authorId: number, post: CreatePostCommand) {
+  async run(authorId: number, post: CreatePostCommand) {    
     const author = await this.usersRepo.findUser(authorId);
     if (!author) throw new BadRequestException('Author not found');
 

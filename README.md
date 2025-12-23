@@ -1,98 +1,186 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 📱 Social Media Fullstack – Technical Assessment
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## 👩‍💻 Autora
+**Juliana María Florez Morales**  
+Full Stack Developer  
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 🧠 Descripción general
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Este proyecto implementa una **aplicación tipo red social**, construida con una arquitectura **Fullstack**, que permite:
 
-## Project setup
+- Autenticación de usuarios
+- Creación de publicaciones (texto e imagen)
+- Visualización de publicaciones
+- Sistema de likes con comportamiento *toggle*
+- Perfil de usuario
+- Manejo de sesión
 
-```bash
-$ npm install
+El sistema está compuesto por:
+- **Backend:** NestJS
+- **Frontend:** React + Vite
+- **Base de datos:** PostgreSQL
+- **Infraestructura:** Docker
+
+---
+
+## 🏗 Arquitectura general
+
+El backend sigue principios de **Clean Architecture** y arquitecture Hexagonal, separando claramente:
+- Application
+- Dominio
+- Infraestructura
+
+---
+
+# 🔧 Backend – NestJS
+
+## 🛠 Tecnologías utilizadas
+- Node.js
+- NestJS
+- TypeORM
+- PostgreSQL
+- JWT
+- Docker
+
+---
+
+## 📂 Estructura del backend
+
+```text
+src/
+├── domain/
+│ ├── model
+│ ├── port
+│ └── service
+├── application/
+│ ├── command
+│ ├── dto
+│ └── query
+├── infrastructure/
+│ ├── controller
+│ ├── entity
+│ └── adapter
+│ └── provider
+├── module.ts
+└── main.ts
 ```
 
-## Compile and run the project
+---
 
-```bash
-# development
-$ npm run start
+## 🔐 Seguridad
+- Autenticación mediante **JWT**
+- Guards y Roles (`ADMIN`, `EMPLOYEE`, `CUSTOMER`)
+- Validaciones automáticas con `ValidationPipe`
 
-# watch mode
-$ npm run start:dev
+---
 
-# production mode
-$ npm run start:prod
+## ❤️ Sistema de Likes (Toggle)
+
+La lógica de likes se maneja en el backend:
+
+- Si existe un like `(userId, postId)` → se elimina
+- Si no existe → se crea
+
+Esto permite:
+- Evitar duplicados
+- Cambiar de usuario sin interferencias
+- Mantener consistencia de datos
+
+---
+
+## 🐳 Backend – Docker
+
+### Dockerfile
+
+```dockerfile
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Instala dependencias primero (mejor cache)
+COPY package*.json ./
+RUN npm install
+
+# Copia el resto del proyecto
+COPY . .
+
+EXPOSE 8080
+
+# Dev mode (usa tu script start:dev)
+CMD ["npm", "run", "start:dev"]
 ```
 
-## Run tests
+### docker-compose
 
-```bash
-# unit tests
-$ npm run test
+```docker-compose
+version: '3.8'
 
-# e2e tests
-$ npm run test:e2e
+services:
+  postgres:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: PeriferiaSocial
+      POSTGRES_USER: PeriferiaSocial
+      POSTGRES_PASSWORD: PeriferiaSocialPass
+    ports:
+      - "2345:5432"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U PeriferiaSocial -d PeriferiaSocial"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
 
-# test coverage
-$ npm run test:cov
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      PORT: 8080
+      DATABASE_TYPE: postgres
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USER: PeriferiaSocial
+      DATABASE_PASSWORD: PeriferiaSocialPass
+      DATABASE_NAME: PeriferiaSocial
+      BASE_URL: http://localhost:8080/
+      TYPEORM_ENTITIES_DIR: dist/**/*.entity{.ts,.js}
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./:/app
+      - /app/node_modules
+      - uploads:/app/uploads
+    command: npm run start:dev
+
+volumes:
+  uploads:
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Levantar Backend
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+docker compose up -d --build
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Backend disponible en:
+```arduino
+http://localhost:8080
+```
 
-## Resources
+Si no se desea lenvantar con el docker sino manualmente, se debe aplicar el siguiente comando
 
-Check out a few resources that may come in handy when working with NestJS:
+```bash
+npm i
+npm run start:dev
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Esto para que instale todas las dependencias que hace que la api funciona y finalmente el otro comando para correr manualmente el backend

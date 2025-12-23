@@ -1,9 +1,11 @@
-import { IsEnum, IsNumber, IsOptional, IsString, MinLength, ValidateIf } from "class-validator";
+import { IsEnum, IsInt, IsNumber, IsOptional, IsString, MinLength, ValidateIf } from "class-validator";
 import { PostType } from "../../../domain/post/model/post-type";
 import { ApiProperty } from "@nestjs/swagger";
+import { Type } from "class-transformer";
 
 export class CreatePostCommand {
-  @IsNumber()
+  @Type(() => Number)
+  @IsInt()
   @ApiProperty({ example: 1 })
   authorId: number;
 
