@@ -16,6 +16,30 @@ export class PgPostRepository implements PostRepository {
     private readonly _postRepository: Repository<PostEntity>,
     private readonly _postMapper: PostMapper,
   ) {}
+  async update(post: Post): Promise<PostDto> {
+    const entity = await this._postRepository.findOne({
+      where: { id: post.id },
+      relations: {
+        author: true,
+        comments: true,
+        likes: true,
+      },
+    });
+
+    if (!entity) {
+      throw new Error('Post not found');
+    }
+
+    // Actualizar solo lo necesario
+    entity.textContent = post.textContent ?? entity.textContent;
+    // entity.caption = post.caption ?? entity.caption;
+    // entity.source = post.source ?? entity.source;
+    // entity.type = post.type ?? entity.type;
+    entity.updatedAt = new Date();
+    const updated = await this._postRepository.save(entity);
+
+    return this._postMapper.entityToDomain(updated);
+  }
 
   async create(post: Post): Promise<PostDto> {
     const entity = new PostEntity();
@@ -51,8 +75,6 @@ export class PgPostRepository implements PostRepository {
   //   return await this._userRepository.save({ id, ...user });
   // }
 
- 
-
   // async deleteUser(id: number): Promise<boolean> {
   //   return (await this._userRepository.delete(id)).affected === 1;
   // }
@@ -63,9 +85,9 @@ export class PgPostRepository implements PostRepository {
       relations: {
         author: true,
         comments: true,
-        likes: true
-      }
-    });    
+        likes: true,
+      },
+    });
     return post ? this._postMapper.entityToDomain(post) : null;
   }
 
@@ -74,6 +96,6 @@ export class PgPostRepository implements PostRepository {
       relations: { author: true, comments: true, likes: true },
       order: { createdAt: 'DESC' },
     });
-    return postsEntity.map((p) => this._postMapper.entityToDomain(p))
+    return postsEntity.map((p) => this._postMapper.entityToDomain(p));
   }
 }

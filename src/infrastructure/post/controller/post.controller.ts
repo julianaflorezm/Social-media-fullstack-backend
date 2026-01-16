@@ -30,6 +30,8 @@ import { extname } from 'path';
 import { diskStorage } from 'multer';
 import { PostType } from 'src/domain/post/model/post-type';
 import { GetAllPostHandler } from 'src/application/post/query/get-all-post.hadler';
+import { UpdatePostHandler } from 'src/application/post/command/update-post.handler';
+import { UpdatePostCommand } from 'src/application/post/command/update-post.command';
 
 @ApiBearerAuth()
 @ApiTags('post')
@@ -38,6 +40,7 @@ export class PostController {
   constructor(
     private readonly _getAllPostHandler: GetAllPostHandler,
     private readonly _createPostHandler: CreatePostHandler,
+    private readonly _updatePostHandler: UpdatePostHandler
   ) {}
 
   @Get('all')
@@ -150,8 +153,6 @@ export class PostController {
     @Body()
     post: CreatePostCommand,
   ): Promise<PostDto> {
-    console.log(post.authorId);
-    
     if (!source && post.type === PostType.IMAGE) {
       throw new BadRequestException('Image file is required');
     } 
@@ -162,39 +163,60 @@ export class PostController {
     return await this._createPostHandler.run(post);
   }
 
-  // @Put(':id')
-  // @ApiOperation({ summary: 'Update users.' })
-  // @ApiResponse({
-  //   status: 200,
-  //   description: 'Update user persisted on database',
-  //   type: UserDto,
-  // })
-  // @ApiNotFoundResponse({
-  //   description: 'User not found on database or id required',
-  // })
-  // @ApiNotAcceptableResponse({
-  //   description: 'User id must be a number',
-  // })
-  // @UseGuards(JwtAuthGuard)
-  // @UseGuards(AuthGuard('jwt'))
-  // @Roles('ADMIN', 'EMPLOYEE', 'CUSTOMER')
-  // async update(
-  //   @Param(
-  //     'id',
-  //     new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
-  //   )
-  //   id: number,
-  //   @Body() user: Partial<CreateUserCommand>,
-  // ): Promise<UserDto> {
-  //   return await this._updateUserHandler.run(id, user);
-  // }
-
-  // @Post('login')
-  // @ApiOperation({ summary: 'User login' })
-  // async login(
-  //   @Body()
-  //   user: UserLoginCommand,
-  // ): Promise<UserDto> {
-  //   return await this._loginUserHandler.run(user);
-  // }
+  @Put()
+  @ApiOperation({ summary: 'Create post' })
+  @ApiCreatedResponse({
+    description: 'Post persisted on database',
+    type: PostDto,
+  })
+  @Roles('ADMIN', 'EMPLOYEE', 'CUSTOMER')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        id: { type: 'number', example: 1 },
+        source: { type: 'string', format: 'binary' },
+        authorId: { type: 'number', example: 1 },
+        type: { type: 'string', enum: [PostType.IMAGE, PostType.TEXT], example: PostType.IMAGE },
+        textContent: { type: 'string', nullable: true, example: 'Hola' },
+        caption: { type: 'string', nullable: true, example: 'Mi caption' },
+      },
+      required: ['authorId', 'type'],
+    },
+  })
+  @UseInterceptors(
+    FileInterceptor('source', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (_req, source, cb) => {
+          const ext = extname(source.originalname); // .png .jpg etc
+          const filename = `${randomUUID()}${ext}`;
+          cb(null, filename);
+        },
+      }),
+      fileFilter: (_req, source, cb) => {
+        // Solo imágenes
+        if (!source.mimetype.startsWith('image/')) {
+          return cb(new BadRequestException('Only image files are allowed'), false);
+        }
+        cb(null, true);
+      },
+      limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+    }),
+  )
+  async update(
+    @UploadedFile() source: Express.Multer.File,
+    @Body()
+    post: UpdatePostCommand,
+  ): Promise<PostDto> {
+    if (!source && post.type === PostType.IMAGE) {
+      throw new BadRequestException('Image file is required');
+    } 
+    if (source && post.type === PostType.IMAGE) { 
+      const imageUrl = `${process.env.BASE_URL}uploads/${source.filename}`;
+      post.source = imageUrl;
+    }
+    return await this._updatePostHandler.run(post);
+  }
 }

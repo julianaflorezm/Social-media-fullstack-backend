@@ -14,6 +14,9 @@ import { UserProviderModule } from '../../../infrastructure/user/provider/user-p
 import { GetAllPostService } from '../../../domain/post/service/get-all-post-service';
 import { getAllPostServiceProvider } from './service/get-all-post-service.provider';
 import { GetAllPostHandler } from 'src/application/post/query/get-all-post.hadler';
+import { UpdatePostHandler } from 'src/application/post/command/update-post.handler';
+import { UpdatePostsService } from 'src/domain/post/service/update-post-service';
+import { updatePostServiceProvider } from './service/update-post-service.provider';
 
 @Module({
   imports: [
@@ -44,6 +47,11 @@ import { GetAllPostHandler } from 'src/application/post/query/get-all-post.hadle
       inject: [PostRepository, UserRepository],
       useFactory: createPostServiceProvider,
     },
+    {
+      provide: UpdatePostsService,
+      inject: [PostRepository, UserRepository],
+      useFactory: updatePostServiceProvider,
+    },
     // {
     //   provide: UpdateUserService,
     //   inject: [UserRepository],
@@ -59,6 +67,7 @@ import { GetAllPostHandler } from 'src/application/post/query/get-all-post.hadle
     // DeleteUserHandler,
     GetAllPostHandler,
     CreatePostHandler,
+    UpdatePostHandler,
     // UpdateUserHandler,
     // GetUserListHandler,
     postRepositoryProvider,
@@ -66,8 +75,10 @@ import { GetAllPostHandler } from 'src/application/post/query/get-all-post.hadle
   exports: [
     PostRepository,
     CreatePostsService,
+    UpdatePostsService,
     CreatePostHandler,
-    GetAllPostHandler
+    GetAllPostHandler,
+    UpdatePostHandler
   ],
 })
 export class PostProviderModule {}

@@ -7,15 +7,17 @@ import { CreatePostCommand } from 'src/application/post/command/create-post.comm
 import { PostRepository } from '../port/repository/post-repository';
 import { UserRepository } from '../../../domain/user/port/repository/user-repository';
 import { Post } from '../model/post';
+import { UpdatePostCommand } from 'src/application/post/command/update-post.command';
 
 @Injectable()
-export class CreatePostsService {
+export class UpdatePostsService {
   constructor(
     @InjectRepository(PostEntity) private readonly postsRepo: PostRepository,
     @InjectRepository(UserEntity) private readonly usersRepo: UserRepository,
   ) {}
 
-  async run(authorId: number, post: CreatePostCommand) {    
+  async run(authorId: number, post: UpdatePostCommand) {  
+      
     const author = await this.usersRepo.findUser(authorId);
     if (!author) throw new BadRequestException('Author not found');
 
@@ -25,7 +27,9 @@ export class CreatePostsService {
     if (post.type === PostType.IMAGE && !post.source?.trim()) {
       throw new BadRequestException('Source is required for image posts');
     }
+    
     const postToCreate: Post = {
+      id: post.id?.toString(),
       author,
       type: post.type,
       textContent: post.type === PostType.TEXT
@@ -38,7 +42,7 @@ export class CreatePostsService {
                 ? post.caption?.trim() ?? null
                 : null,
     }
-    const postCreated = await this.postsRepo.create(postToCreate);
+    const postCreated = await this.postsRepo.update(postToCreate);
 
     return postCreated;
   }
